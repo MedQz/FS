@@ -137,15 +137,6 @@
             <div class="card" onclick="showTests('anatomy')">
                 <h2 class="text-2xl font-bold">Anatomy</h2>
             </div>
-            <div class="card" onclick="showTests('physiology')">
-                <h2 class="text-2xl font-bold">Physiology</h2>
-            </div>
-            <div class="card" onclick="showTests('histology')">
-                <h2 class="text-2xl font-bold">Histology</h2>
-            </div>
-            <div class="card" onclick="showTests('biochemistry')">
-                <h2 class="text-2xl font-bold">Biochemistry</h2>
-            </div>
         </div>
 
         <div id="testList" class="hidden test-list">
@@ -157,19 +148,6 @@
             <h3 class="text-xl font-bold mb-4">اختيارات الاختبار</h3>
             <label for="questionCount" class="block mb-2">عدد الأسئلة:</label>
             <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="أدخل عدد الأسئلة" />
-
-            <label class="block mb-2">اختيار نوع الأسئلة:</label>
-            <select id="questionType" class="border rounded p-2 mb-4" onchange="toggleRangeInput()">
-                <option value="random">عشوائية</option>
-                <option value="ordered">مرتبة</option>
-            </select>
-
-            <div id="rangeInputs" class="hidden">
-                <label for="rangeStart" class="block mb-2">من:</label>
-                <input type="number" id="rangeStart" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأدنى" />
-                <label for="rangeEnd" class="block mb-2">إلى:</label>
-                <input type="number" id="rangeEnd" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأقصى" />
-            </div>
 
             <button class="btn mt-4" onclick="startTest()">ابدأ الاختبار</button>
         </div>
@@ -214,7 +192,6 @@
                     testsHTML = `
                         <a href="#" class="btn" onclick="showOptions()">Lower Limb</a>`;
                     break;
-                // يمكن إضافة محتوى الاختبارات الأخرى هنا
             }
 
             testsContent.innerHTML = testsHTML;
@@ -225,16 +202,8 @@
             document.getElementById('options').style.display = 'block';
         }
 
-        function toggleRangeInput() {
-            const type = document.getElementById('questionType').value;
-            document.getElementById('rangeInputs').style.display = type === 'ordered' ? 'block' : 'none';
-        }
-
         function startTest() {
             const questionCount = document.getElementById('questionCount').value;
-            const questionType = document.getElementById('questionType').value;
-
-            // تحميل الأسئلة من الملف LowerLimb.txt
             loadQuestions('LowerLimb.txt', questionCount);
         }
 
@@ -242,20 +211,19 @@
             fetch(filePath)
                 .then(response => response.text())
                 .then(data => {
-                    const lines = data.split('\n\n').filter(line => line.trim() !== '');
-                    questions = lines.map(line => {
-                        const parts = line.split('Answer:');
-                        const questionPart = parts[0].trim();
-                        const answerPart = parts[1].trim();
-
-                        const options = questionPart.split('\n').slice(1).map(option => option.trim()).filter(option => option);
+                    const questionBlocks = data.split(/---/).filter(block => block.trim() !== '');
+                    questions = questionBlocks.map(block => {
+                        const lines = block.trim().split('\n');
+                        const questionText = lines[0].trim();
+                        const options = lines.slice(1, -1).map(option => option.trim());
+                        const answerLine = lines[lines.length - 1].trim();
+                        const correctAnswer = answerLine.split(':')[1].trim().charAt(0);
                         return {
-                            question: options[0],
-                            options: options.slice(1),
-                            correctAnswer: answerPart.charAt(0) // الحصول على الخيار الصحيح
+                            question: questionText,
+                            options: options,
+                            correctAnswer: correctAnswer
                         };
-                    });
-                    questions = questions.slice(0, questionCount);
+                    }).slice(0, questionCount);
                     displayQuestion();
                 })
                 .catch(error => console.error('Error loading questions:', error));
@@ -268,7 +236,7 @@
                 <p>${question.question}</p>
                 ${question.options.map((option, index) => `
                     <div>
-                        <input type="radio" name="answer" value="${option}" id="option${index}">
+                        <input type="radio" name="answer" value="${option.charAt(0)}" id="option${index}">
                         <label for="option${index}">${option}</label>
                     </div>
                 `).join('')}
