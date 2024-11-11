@@ -137,6 +137,15 @@
             <div class="card" onclick="showTests('anatomy')">
                 <h2 class="text-2xl font-bold">Anatomy</h2>
             </div>
+            <div class="card" onclick="showTests('physiology')">
+                <h2 class="text-2xl font-bold">Physiology</h2>
+            </div>
+            <div class="card" onclick="showTests('biochemistry')">
+                <h2 class="text-2xl font-bold">Biochemistry</h2>
+            </div>
+            <div class="card" onclick="showTests('pathology')">
+                <h2 class="text-2xl font-bold">Pathology</h2>
+            </div>
         </div>
 
         <div id="testList" class="hidden test-list">
@@ -192,6 +201,18 @@
                     testsHTML = `
                         <a href="#" class="btn" onclick="showOptions()">Lower Limb</a>`;
                     break;
+                case 'physiology':
+                    testsHTML = `
+                        <a href="#" class="btn" onclick="showOptions()">Cardiovascular System</a>`;
+                    break;
+                case 'biochemistry':
+                    testsHTML = `
+                        <a href="#" class="btn" onclick="showOptions()">Metabolism</a>`;
+                    break;
+                case 'pathology':
+                    testsHTML = `
+                        <a href="#" class="btn" onclick="showOptions()">General Pathology</a>`;
+                    break;
             }
 
             testsContent.innerHTML = testsHTML;
@@ -218,6 +239,7 @@
                         const options = lines.slice(1, -1).map(option => option.trim());
                         const answerLine = lines[lines.length - 1].trim();
                         const correctAnswer = answerLine.split(':')[1].trim().charAt(0);
+
                         return {
                             question: questionText,
                             options: options,
