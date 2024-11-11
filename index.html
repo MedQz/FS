@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced MCQ Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #e74c3c; /* لون الشعار */
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .medqz-logo {
+            font-size: 36px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .med {
+            color: #ffffff; /* لون داكن */
+        }
+
+        .qz {
+            color: #2c3e50; /* لون فاتح */
+        }
+
+        .registered {
+            font-size: 16px;
+            color: #ffffff;
+            margin-left: 5px;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .test-list {
+            background-color: #2980b9; /* لون أزرق قاتم */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0; /* إضافة مسافة بين الأزرار */
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .options, .quiz {
+            display: none; /* إخفاء الخيارات وواجهة الاختبار في البداية */
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            margin: 20px 0;
+        }
+
+        .result {
+            display: none;
+        }
+
+        .correct {
+            background-color: #d4edda; /* لون أخضر فاتح */
+        }
+
+        .incorrect {
+            background-color: #f8d7da; /* لون أحمر فاتح */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="medqz-logo">
+            <span class="med">Med</span>
+            <span class="qz">Qz</span>
+            <span class="registered">®</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8">Welcome to Advanced MCQ Test</h1>
+        <div class="grid grid-cols-2 gap-6 mb-8">
+            <div class="card" onclick="showTests('anatomy')">
+                <h2 class="text-2xl font-bold">Anatomy</h2>
+            </div>
+            <div class="card" onclick="showTests('physiology')">
+                <h2 class="text-2xl font-bold">Physiology</h2>
+            </div>
+            <div class="card" onclick="showTests('histology')">
+                <h2 class="text-2xl font-bold">Histology</h2>
+            </div>
+            <div class="card" onclick="showTests('biochemistry')">
+                <h2 class="text-2xl font-bold">Biochemistry</h2>
+            </div>
+        </div>
+
+        <div id="testList" class="hidden test-list">
+            <h3 class="text-xl font-bold mb-4">Test List:</h3>
+            <div id="testsContent"></div>
+        </div>
+
+        <div id="options" class="options">
+            <h3 class="text-xl font-bold mb-4">اختيارات الاختبار</h3>
+            <label for="questionCount" class="block mb-2">عدد الأسئلة:</label>
+            <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="أدخل عدد الأسئلة" />
+
+            <label class="block mb-2">اختيار نوع الأسئلة:</label>
+            <select id="questionType" class="border rounded p-2 mb-4" onchange="toggleRangeInput()">
+                <option value="random">عشوائية</option>
+                <option value="ordered">مرتبة</option>
+            </select>
+
+            <div id="rangeInputs" class="hidden">
+                <label for="rangeStart" class="block mb-2">من:</label>
+                <input type="number" id="rangeStart" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأدنى" />
+                <label for="rangeEnd" class="block mb-2">إلى:</label>
+                <input type="number" id="rangeEnd" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأقصى" />
+            </div>
+
+            <button class="btn mt-4" onclick="startTest()">ابدأ الاختبار</button>
+        </div>
+
+        <div id="quiz" class="quiz">
+            <h3 class="text-xl font-bold mb-4">السؤال:</h3>
+            <div class="question-number" id="questionNumber"></div>
+            <div id="quizContent"></div>
+            <div class="flex justify-between mt-4">
+                <button class="btn" id="prevButton" onclick="prevQuestion()">السابق</button>
+                <button class="btn" id="nextButton" onclick="nextQuestion()">التالي</button>
+            </div>
+            <div class="mt-4">
+                <input type="number" id="jumpToQuestion" placeholder="اذهب إلى السؤال رقم" class="border rounded p-2 mb-4" />
+                <button class="btn" onclick="jumpToQuestion()">اذهب</button>
+            </div>
+        </div>
+
+        <div id="result" class="result">
+            <h3 class="text-xl font-bold mb-4">نتيجة الاختبار:</h3>
+            <div id="finalScore"></div>
+            <div id="resultsContent"></div>
+            <button class="btn mt-4" onclick="printResults()">طباعة النتائج</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Advanced MCQ Test. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+
+        function showTests(subject) {
+            const testsContent = document.getElementById('testsContent');
+            let testsHTML = '';
+
+            switch(subject) {
+                case 'anatomy':
+                    testsHTML = `
+                        <a href="#" class="btn" onclick="showOptions()">Lower Limb</a>`;
+                    break;
+                // يمكن إضافة محتوى الاختبارات الأخرى هنا
+            }
+
+            testsContent.innerHTML = testsHTML;
+            document.getElementById('testList').classList.remove('hidden');
+        }
+
+        function showOptions() {
+            document.getElementById('options').style.display = 'block';
+        }
+
+        function toggleRangeInput() {
+            const type = document.getElementById('questionType').value;
+            document.getElementById('rangeInputs').style.display = type === 'ordered' ? 'block' : 'none';
+        }
+
+        function startTest() {
+            const questionCount = document.getElementById('questionCount').value;
+            const questionType = document.getElementById('questionType').value;
+
+            // تحميل الأسئلة من الملف LowerLimb.txt
+            loadQuestions('Anatomy/LowerLimb.txt', questionCount);
+        }
+
+        function loadQuestions(filePath, questionCount) {
+            fetch(filePath)
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.split('\n\n').filter(line => line.trim() !== ''); // تقسيم الأسئلة بناءً على الأسطر الفارغة
+                    questions = lines.map(line => {
+                        const parts = line.split('Answer:');
+                        const questionPart = parts[0].trim();
+                        const answerPart = parts[1].trim();
+                        const options = questionPart.split('\n').slice(1).map(option => option.trim()).filter(option => option);
+                        return {
+                            question: options[0],
+                            options: options.slice(1),
+                            correctAnswer: answerPart.split(' ')[0] // الحصول على الخيار الصحيح
+                        };
+                    });
+                    questions = questions.slice(0, questionCount); // تحديد عدد الأسئلة المطلوبة
+                    displayQuestion();
+                })
+                .catch(error => console.error('Error loading questions:', error));
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionNumber').innerText = `السؤال ${currentQuestionIndex + 1} من ${questions.length}`;
+            document.getElementById('quizContent').innerHTML = `
+                <p>${question.question}</p>
+                ${question.options.map((option, index) => `
+                    <div>
+                        <input type="radio" name="answer" value="${option}" id="option${index}">
+                        <label for="option${index}">${option}</label>
+                    </div>
+                `).join('')}
+            `;
+
+            document.getElementById('prevButton').style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
+            document.getElementById('nextButton').innerText = currentQuestionIndex === questions.length - 1 ? 'إنهاء الاختبار' : 'التالي';
+            document.getElementById('jumpToQuestion').value = '';
+        }
+
+        function nextQuestion() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+            }
+
+            if (currentQuestionIndex === questions.length - 1) {
+                showResults();
+            } else {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function jumpToQuestion() {
+            const jumpTo = parseInt(document.getElementById('jumpToQuestion').value) - 1;
+            if (jumpTo >= 0 && jumpTo < questions.length) {
+                currentQuestionIndex = jumpTo;
+                displayQuestion();
+            }
+        }
+
+        function showResults() {
+            const finalScore = userAnswers.reduce((score, answer, index) => {
+                return score + (answer === questions[index].correctAnswer ? 1 : 0);
+            }, 0);
+            document.getElementById('finalScore').innerText = `درجتك النهائية: ${finalScore} من ${questions.length}`;
+            
+            const resultsContent = questions.map((question, index) => {
+                const userAnswer = userAnswers[index] || 'لم يتم الإجابة';
+                const isCorrect = userAnswer === question.correctAnswer;
+                return `
+                    <div class="${isCorrect ? 'correct' : 'incorrect'} p-2 mb-2 rounded">
+                        <strong>${index + 1}. ${question.question}</strong><br>
+                        <span>إجابتك: ${userAnswer}</span><br>
+                        <span>الإجابة الصحيحة: ${question.correctAnswer}</span>
+                    </div>`;
+            }).join('');
+            document.getElementById('resultsContent').innerHTML = resultsContent;
+
+            document.getElementById('quiz').style.display = 'none'; // إخفاء واجهة الاختبار
+            document.getElementById('result').style.display = 'block'; // إظهار نتائج الاختبار
+        }
+
+        function printResults() {
+            const printContent = document.getElementById('result').innerHTML;
+            const newWindow = window.open('', '', 'height=600,width=800');
+            newWindow.document.write('<html><head><title>طباعة النتائج</title>');
+            newWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">');
+            newWindow.document.write('</head><body>');
+            newWindow.document.write(printContent);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.print();
+        }
+    </script>
+</body>
+</html>
