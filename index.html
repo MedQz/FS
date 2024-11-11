@@ -17,7 +17,7 @@
         }
 
         header {
-            background-color: #e74c3c; 
+            background-color: #e74c3c; /* لون الشعار */
             padding: 20px;
             display: flex;
             align-items: center;
@@ -32,11 +32,11 @@
         }
 
         .med {
-            color: #ffffff; 
+            color: #ffffff; /* لون داكن */
         }
 
         .qz {
-            color: #2c3e50; 
+            color: #2c3e50; /* لون فاتح */
         }
 
         .registered {
@@ -64,7 +64,7 @@
         }
 
         .test-list {
-            background-color: #2980b9; 
+            background-color: #2980b9; /* لون أزرق قاتم */
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -78,7 +78,7 @@
             border-radius: 5px;
             text-decoration: none;
             display: block;
-            margin: 10px 0; 
+            margin: 10px 0; /* إضافة مسافة بين الأزرار */
             transition: background-color 0.3s;
         }
 
@@ -97,7 +97,7 @@
         }
 
         .options, .quiz {
-            display: none; 
+            display: none; /* إخفاء الخيارات وواجهة الاختبار في البداية */
             margin-top: 20px;
             background: #fff;
             border-radius: 10px;
@@ -114,11 +114,11 @@
         }
 
         .correct {
-            background-color: #d4edda; 
+            background-color: #d4edda; /* لون أخضر فاتح */
         }
 
         .incorrect {
-            background-color: #f8d7da; 
+            background-color: #f8d7da; /* لون أحمر فاتح */
         }
     </style>
 </head>
@@ -140,11 +140,11 @@
             <div class="card" onclick="showTests('physiology')">
                 <h2 class="text-2xl font-bold">Physiology</h2>
             </div>
+            <div class="card" onclick="showTests('histology')">
+                <h2 class="text-2xl font-bold">Histology</h2>
+            </div>
             <div class="card" onclick="showTests('biochemistry')">
                 <h2 class="text-2xl font-bold">Biochemistry</h2>
-            </div>
-            <div class="card" onclick="showTests('pathology')">
-                <h2 class="text-2xl font-bold">Pathology</h2>
             </div>
         </div>
 
@@ -157,6 +157,19 @@
             <h3 class="text-xl font-bold mb-4">اختيارات الاختبار</h3>
             <label for="questionCount" class="block mb-2">عدد الأسئلة:</label>
             <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="أدخل عدد الأسئلة" />
+
+            <label class="block mb-2">اختيار نوع الأسئلة:</label>
+            <select id="questionType" class="border rounded p-2 mb-4" onchange="toggleRangeInput()">
+                <option value="random">عشوائية</option>
+                <option value="ordered">مرتبة</option>
+            </select>
+
+            <div id="rangeInputs" class="hidden">
+                <label for="rangeStart" class="block mb-2">من:</label>
+                <input type="number" id="rangeStart" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأدنى" />
+                <label for="rangeEnd" class="block mb-2">إلى:</label>
+                <input type="number" id="rangeEnd" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأقصى" />
+            </div>
 
             <button class="btn mt-4" onclick="startTest()">ابدأ الاختبار</button>
         </div>
@@ -199,28 +212,9 @@
             switch(subject) {
                 case 'anatomy':
                     testsHTML = `
-                        <a href="#" class="btn" onclick="showOptions()">Lower Limb</a>
-                        <a href="#" class="btn" onclick="showOptions()">Upper Limb</a>
-                        <a href="#" class="btn" onclick="showOptions()">Thorax</a>`;
+                        <a href="#" class="btn" onclick="showOptions()">Lower Limb</a>`;
                     break;
-                case 'physiology':
-                    testsHTML = `
-                        <a href="#" class="btn" onclick="showOptions()">Cardiovascular System</a>
-                        <a href="#" class="btn" onclick="showOptions()">Respiratory System</a>
-                        <a href="#" class="btn" onclick="showOptions()">Nervous System</a>`;
-                    break;
-                case 'biochemistry':
-                    testsHTML = `
-                        <a href="#" class="btn" onclick="showOptions()">Metabolism</a>
-                        <a href="#" class="btn" onclick="showOptions()">Genetics</a>
-                        <a href="#" class="btn" onclick="showOptions()">Enzymology</a>`;
-                    break;
-                case 'pathology':
-                    testsHTML = `
-                        <a href="#" class="btn" onclick="showOptions()">General Pathology</a>
-                        <a href="#" class="btn" onclick="showOptions()">Systemic Pathology</a>
-                        <a href="#" class="btn" onclick="showOptions()">Microbiology</a>`;
-                    break;
+                // يمكن إضافة محتوى الاختبارات الأخرى هنا
             }
 
             testsContent.innerHTML = testsHTML;
@@ -231,46 +225,35 @@
             document.getElementById('options').style.display = 'block';
         }
 
+        function toggleRangeInput() {
+            const type = document.getElementById('questionType').value;
+            document.getElementById('rangeInputs').style.display = type === 'ordered' ? 'block' : 'none';
+        }
+
         function startTest() {
-            const questionCount = document.getElementById('questionCount').value;
-            if (questionCount <= 0) {
-                alert('يرجى إدخال عدد صحيح من الأسئلة.');
-                return;
-            }
-            loadQuestions('LowerLimb.txt', questionCount);
+            window.location.href = 'index-Q.html'; // إعادة التوجيه إلى الصفحة الجديدة
         }
 
         function loadQuestions(filePath, questionCount) {
             fetch(filePath)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.text();
-                })
+                .then(response => response.text())
                 .then(data => {
-                    const questionBlocks = data.split(/---/).filter(block => block.trim() !== '');
-                    questions = questionBlocks.map(block => {
-                        const lines = block.trim().split('\n');
-                        const questionText = lines[0].trim();
-                        const options = lines.slice(1, -1).map(option => option.trim());
-                        const answerLine = lines[lines.length - 1].trim();
-                        const correctAnswer = answerLine.split(':')[1].trim().charAt(0);
-
+                    const lines = data.split('\n\n').filter(line => line.trim() !== ''); // تقسيم الأسئلة بناءً على الأسطر الفارغة
+                    questions = lines.map(line => {
+                        const parts = line.split('Answer:');
+                        const questionPart = parts[0].trim();
+                        const answerPart = parts[1].trim();
+                        const options = questionPart.split('\n').slice(1).map(option => option.trim()).filter(option => option);
                         return {
-                            question: questionText,
-                            options: options,
-                            correctAnswer: correctAnswer
+                            question: options[0],
+                            options: options.slice(1),
+                            correctAnswer: answerPart.split(' ')[0] // الحصول على الخيار الصحيح
                         };
-                    }).slice(0, questionCount);
+                    });
+                    questions = questions.slice(0, questionCount); // تحديد عدد الأسئلة المطلوبة
                     displayQuestion();
-                    document.getElementById('options').style.display = 'none';
-                    document.getElementById('quiz').style.display = 'block';
                 })
-                .catch(error => {
-                    console.error('Error loading questions:', error);
-                    alert('لم يتمكن النظام من تحميل الأسئلة. يرجى التحقق من وجود الملف.');
-                });
+                .catch(error => console.error('Error loading questions:', error));
         }
 
         function displayQuestion() {
@@ -280,7 +263,7 @@
                 <p>${question.question}</p>
                 ${question.options.map((option, index) => `
                     <div>
-                        <input type="radio" name="answer" value="${option.charAt(0)}" id="option${index}">
+                        <input type="radio" name="answer" value="${option}" id="option${index}">
                         <label for="option${index}">${option}</label>
                     </div>
                 `).join('')}
@@ -338,8 +321,8 @@
             }).join('');
             document.getElementById('resultsContent').innerHTML = resultsContent;
 
-            document.getElementById('quiz').style.display = 'none'; 
-            document.getElementById('result').style.display = 'block'; 
+            document.getElementById('quiz').style.display = 'none'; // إخفاء واجهة الاختبار
+            document.getElementById('result').style.display = 'block'; // إظهار نتائج الاختبار
         }
 
         function printResults() {
