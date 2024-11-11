@@ -17,7 +17,7 @@
         }
 
         header {
-            background-color: #e74c3c; /* لون الشعار */
+            background-color: #e74c3c; 
             padding: 20px;
             display: flex;
             align-items: center;
@@ -32,11 +32,11 @@
         }
 
         .med {
-            color: #ffffff; /* لون داكن */
+            color: #ffffff; 
         }
 
         .qz {
-            color: #2c3e50; /* لون فاتح */
+            color: #2c3e50; 
         }
 
         .registered {
@@ -64,7 +64,7 @@
         }
 
         .test-list {
-            background-color: #2980b9; /* لون أزرق قاتم */
+            background-color: #2980b9; 
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -78,7 +78,7 @@
             border-radius: 5px;
             text-decoration: none;
             display: block;
-            margin: 10px 0; /* إضافة مسافة بين الأزرار */
+            margin: 10px 0; 
             transition: background-color 0.3s;
         }
 
@@ -97,7 +97,7 @@
         }
 
         .options, .quiz {
-            display: none; /* إخفاء الخيارات وواجهة الاختبار في البداية */
+            display: none; 
             margin-top: 20px;
             background: #fff;
             border-radius: 10px;
@@ -114,11 +114,11 @@
         }
 
         .correct {
-            background-color: #d4edda; /* لون أخضر فاتح */
+            background-color: #d4edda; 
         }
 
         .incorrect {
-            background-color: #f8d7da; /* لون أحمر فاتح */
+            background-color: #f8d7da; 
         }
     </style>
 </head>
@@ -235,26 +235,27 @@
             const questionType = document.getElementById('questionType').value;
 
             // تحميل الأسئلة من الملف LowerLimb.txt
-            loadQuestions('Anatomy/LowerLimb.txt', questionCount);
+            loadQuestions('LowerLimb.txt', questionCount);
         }
 
         function loadQuestions(filePath, questionCount) {
             fetch(filePath)
                 .then(response => response.text())
                 .then(data => {
-                    const lines = data.split('\n\n').filter(line => line.trim() !== ''); // تقسيم الأسئلة بناءً على الأسطر الفارغة
+                    const lines = data.split('\n\n').filter(line => line.trim() !== '');
                     questions = lines.map(line => {
                         const parts = line.split('Answer:');
                         const questionPart = parts[0].trim();
                         const answerPart = parts[1].trim();
+
                         const options = questionPart.split('\n').slice(1).map(option => option.trim()).filter(option => option);
                         return {
                             question: options[0],
                             options: options.slice(1),
-                            correctAnswer: answerPart.split(' ')[0] // الحصول على الخيار الصحيح
+                            correctAnswer: answerPart.charAt(0) // الحصول على الخيار الصحيح
                         };
                     });
-                    questions = questions.slice(0, questionCount); // تحديد عدد الأسئلة المطلوبة
+                    questions = questions.slice(0, questionCount);
                     displayQuestion();
                 })
                 .catch(error => console.error('Error loading questions:', error));
@@ -325,8 +326,8 @@
             }).join('');
             document.getElementById('resultsContent').innerHTML = resultsContent;
 
-            document.getElementById('quiz').style.display = 'none'; // إخفاء واجهة الاختبار
-            document.getElementById('result').style.display = 'block'; // إظهار نتائج الاختبار
+            document.getElementById('quiz').style.display = 'none'; 
+            document.getElementById('result').style.display = 'block'; 
         }
 
         function printResults() {
