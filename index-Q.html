@@ -70,6 +70,12 @@
             transition: width 0.5s ease-in-out;
         }
 
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c; /* لون مميز للعداد */
+        }
+
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -103,6 +109,7 @@
         </header>
 
         <main class="neumorphic p-8 mb-8 animate__animated animate__fadeIn">
+            <div id="timer" class="mb-4">زمن الاختبار: <span id="timeDisplay">00:00</span></div>
             <div id="progressBarContainer" class="mb-6 bg-gray-200 rounded-full">
                 <div id="progressBar" class="bg-blue-500 text-xs leading-none py-1 text-center text-white rounded-full" style="width: 0%"></div>
             </div>
@@ -141,6 +148,8 @@
         let questions = [];
         let currentQuestionIndex = 0;
         let selectedAnswers = [];
+        let timeRemaining;
+        let timerInterval;
 
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
@@ -151,6 +160,10 @@
 
         async function loadQuestions() {
             try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const timeLimit = parseInt(urlParams.get('time')) || 0; // قراءة زمن الاختبار
+                timeRemaining = timeLimit * 60; // تحويل الزمن إلى ثواني
+
                 const response = await fetch('LowerLimb-Q.txt');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -168,6 +181,7 @@
                 });
                 displayQuestion();
                 updateProgressBar();
+                startTimer(); // بدء العد التنازلي
             } catch (error) {
                 console.error('Error loading questions:', error);
                 document.getElementById('question').innerText = 'حدث خطأ أثناء تحميل الأسئلة.';
@@ -302,6 +316,21 @@
             newWindow.document.close();
             newWindow.print();
         });
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timeDisplay').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('nextButton').click(); // الضغط على زر إنهاء الاختبار
+                }
+            }, 1000);
+        }
 
         window.onload = loadQuestions;
 
