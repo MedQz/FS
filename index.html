@@ -131,21 +131,10 @@
         <div id="options" class="options">
             <h3 class="text-xl font-bold mb-4">اختيارات الاختبار</h3>
             <label for="questionCount" class="block mb-2">عدد الأسئلة:</label>
-            <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="أدخل عدد الأسئلة" />
-
-            <label class="block mb-2">اختيار نوع الأسئلة:</label>
-            <select id="questionType" class="border rounded p-2 mb-4">
-                <option value="random">عشوائية</option>
-                <option value="ordered">مرتبة</option>
-            </select>
-
-            <label for="rangeStart" class="block mb-2">من:</label>
-            <input type="number" id="rangeStart" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأدنى" />
-            <label for="rangeEnd" class="block mb-2">إلى:</label>
-            <input type="number" id="rangeEnd" class="border rounded p-2 mb-4" placeholder="أدخل العدد الأقصى" />
+            <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="أدخل عدد الأسئلة" required />
 
             <label for="timeLimit" class="block mb-2">زمن الاختبار (بالدقائق):</label>
-            <input type="number" id="timeLimit" class="border rounded p-2 mb-4" placeholder="أدخل زمن الاختبار بالدقائق" />
+            <input type="number" id="timeLimit" class="border rounded p-2 mb-4" placeholder="أدخل زمن الاختبار بالدقائق" required />
 
             <button class="btn mt-4" onclick="startTest()">ابدأ الاختبار</button>
         </div>
@@ -182,13 +171,10 @@
 
         function startTest() {
             const questionCount = document.getElementById('questionCount').value;
-            const questionType = document.getElementById('questionType').value;
-            const rangeStart = document.getElementById('rangeStart').value || 0;
-            const rangeEnd = document.getElementById('rangeEnd').value || 0;
             const timeLimit = document.getElementById('timeLimit').value || 0; // زمن الاختبار
 
             // بناء URL مع معلمات الاستعلام
-            const url = `index-Q.html?count=${questionCount}&type=${questionType}&start=${rangeStart}&end=${rangeEnd}&time=${timeLimit}`;
+            const url = `index-Q.html?count=${questionCount}&time=${timeLimit}`;
             window.location.href = url; // إعادة التوجيه إلى صفحة الاختبار
         }
     </script>
