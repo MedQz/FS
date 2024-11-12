@@ -73,7 +73,7 @@
         #timer {
             font-size: 24px;
             font-weight: bold;
-            color: #e74c3c; /* لون مميز للعداد */
+            color: #e74c3c;
         }
 
         @keyframes float {
@@ -122,13 +122,6 @@
             <button id="nextButton" class="btn bg-blue-500 text-white px-6 py-2 rounded-full">التالي</button>
         </div>
 
-        <div class="glass p-4 mb-8 animate__animated animate__fadeInUp">
-            <div class="flex items-center justify-center space-x-4">
-                <input type="number" id="jumpToQuestion" placeholder="رقم السؤال" min="1" class="px-3 py-2 border rounded-md w-32 text-center">
-                <button id="jumpButton" class="btn bg-purple-500 text-white px-4 py-2 rounded-md">انتقال</button>
-            </div>
-        </div>
-
         <div id="results" class="hidden animate__animated animate__fadeIn">
             <h2 class="text-3xl font-bold mb-6 text-center">نتائج الاختبار</h2>
             <div id="finalScore" class="text-2xl font-bold mb-6 text-center"></div>
@@ -150,6 +143,7 @@
         let selectedAnswers = [];
         let timeRemaining;
         let timerInterval;
+        const totalQuestions = 10; // عدد الأسئلة المطلوبة
 
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
@@ -171,14 +165,16 @@
                 const text = await response.text();
                 const questionBlocks = text.split('###').map(q => q.trim()).filter(q => q.length > 0);
                 
-                questionBlocks.forEach(block => {
+                // اختيار أسئلة عشوائية
+                questions = questionBlocks.sort(() => 0.5 - Math.random()).slice(0, totalQuestions).map(block => {
                     const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
                     const question = lines[0];
                     const options = lines.slice(1, lines.length - 1);
                     const correctAnswer = lines[lines.length - 1].replace('**Answer:** ', '').trim();
                     
-                    questions.push({ question, options, correctAnswer });
+                    return { question, options, correctAnswer };
                 });
+
                 displayQuestion();
                 updateProgressBar();
                 startTimer(); // بدء العد التنازلي
@@ -245,17 +241,6 @@
             }
         });
 
-        document.getElementById('jumpButton').addEventListener('click', () => {
-            const jumpToIndex = parseInt(document.getElementById('jumpToQuestion').value, 10) - 1;
-            if (jumpToIndex >= 0 && jumpToIndex < questions.length) {
-                currentQuestionIndex = jumpToIndex;
-                displayQuestion();
-                updateProgressBar();
-            } else {
-                alert('رقم السؤال غير صالح. يرجى إدخال رقم صحيح.');
-            }
-        });
-
         function showResults() {
             let correctCount = 0;
             let resultsContent = '';
@@ -302,7 +287,6 @@
 
             document.querySelector('main').style.display = 'none';
             document.querySelector('.flex.justify-between').style.display = 'none';
-            document.querySelector('.glass').style.display = 'none';
         }
 
         document.getElementById('printButton').addEventListener('click', () => {
@@ -327,7 +311,7 @@
 
                 if (timeRemaining < 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('nextButton').click(); // الضغط على زر إنهاء الاختبار
+                    showResults(); // إنهاء الاختبار تلقائيًا عند انتهاء الزمن
                 }
             }, 1000);
         }
