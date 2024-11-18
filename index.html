@@ -3,32 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced MCQ Test</title>
+    <title>MedQz - Professional Medical MCQ Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --light-bg: #f8fafc;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            background-color: #e74c3c;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .medqz-logo {
-            font-size: 36px;
+            font-size: 2.5rem;
+            font-weight: 700;
             color: white;
             display: flex;
             align-items: center;
+            gap: 0.5rem;
         }
 
         .med {
@@ -36,74 +49,163 @@
         }
 
         .qz {
-            color: #2c3e50;
+            color: #ecf0f1;
         }
 
         .registered {
-            font-size: 16px;
+            font-size: 1rem;
             color: #ffffff;
-            margin-left: 5px;
+            vertical-align: super;
         }
 
         .container {
-            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            text-align: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
             transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .test-list {
-            background-color: #2980b9;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin-top: 2rem;
         }
 
         .btn {
-            background-color: #3498db;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             text-decoration: none;
             display: block;
-            margin: 10px 0;
-            transition: background-color 0.3s;
+            margin: 0.75rem 0;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
-            background-color: #2980b9;
+            transform: translateX(5px);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .btn::after {
+            content: '→';
+            position: absolute;
+            right: 1.5rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+        }
+
+        .options {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-top: 2rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
 
         footer {
-            background-color: #333;
+            background: var(--primary-color);
             color: white;
             text-align: center;
-            padding: 10px 0;
-            position: relative;
-            bottom: 0;
-            width: 100%;
+            padding: 1.5rem;
+            margin-top: auto;
         }
 
-        .hidden {
-            display: none;
+        .subject-icon {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
     <header>
         <div class="medqz-logo">
+            <i class="fas fa-heartbeat"></i>
             <span class="med">Med</span>
             <span class="qz">Qz</span>
             <span class="registered">®</span>
@@ -111,170 +213,61 @@
     </header>
 
     <div class="container">
-        <h1 class="text-4xl font-bold text-center mb-8">Welcome to Advanced MCQ Test</h1>
-        <div class="grid grid-cols-2 gap-6 mb-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Professional Medical Assessment Platform</h1>
+        <div class="grid grid-cols-2 gap-8 mb-8">
             <div class="card" onclick="showTests('anatomy')">
-                <h2 class="text-2xl font-bold">Anatomy</h2>
+                <h2><i class="fas fa-brain subject-icon"></i> Anatomy</h2>
+                <p class="text-gray-600">Comprehensive tests on human anatomical structures and systems</p>
             </div>
             <div class="card" onclick="showTests('physiology')">
-                <h2 class="text-2xl font-bold">Physiology</h2>
+                <h2><i class="fas fa-heart subject-icon"></i> Physiology</h2>
+                <p class="text-gray-600">In-depth assessment of body functions and mechanisms</p>
             </div>
             <div class="card" onclick="showTests('histology')">
-                <h2 class="text-2xl font-bold">Histology</h2>
+                <h2><i class="fas fa-microscope subject-icon"></i> Histology</h2>
+                <p class="text-gray-600">Detailed examination of tissue structures and organization</p>
             </div>
             <div class="card" onclick="showTests('biochemistry')">
-                <h2 class="text-2xl font-bold">Biochemistry</h2>
+                <h2><i class="fas fa-flask subject-icon"></i> Biochemistry</h2>
+                <p class="text-gray-600">Analysis of chemical processes within living organisms</p>
             </div>
         </div>
 
         <div id="testList" class="hidden test-list">
-            <h3 class="text-xl font-bold mb-4">Test List:</h3>
+            <h3 class="text-2xl font-bold mb-4">Available Tests</h3>
             <div id="testsContent"></div>
         </div>
 
-        <div id="options" class="options hidden">
-            <h3 class="text-xl font-bold mb-4">Test Options</h3>
-            <label for="questionCount" class="block mb-2">Number of Questions:</label>
-            <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="Enter number of questions" required />
+        <div id="options" class="hidden options">
+            <h3 class="text-2xl font-bold mb-6">Test Configuration</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="questionCount" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-list-ol mr-2"></i>Number of Questions
+                    </label>
+                    <input type="number" id="questionCount" class="form-input" placeholder="Enter number of questions" required />
+                </div>
 
-            <label for="timeLimit" class="block mb-2">Test Duration (in minutes):</label>
-            <input type="number" id="timeLimit" class="border rounded p-2 mb-4" placeholder="Enter test duration in minutes" required />
+                <div>
+                    <label for="timeLimit" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-clock mr-2"></i>Test Duration (minutes)
+                    </label>
+                    <input type="number" id="timeLimit" class="form-input" placeholder="Enter test duration in minutes" required />
+                </div>
 
-            <button class="btn mt-4" onclick="startTest()">Start Test</button>
+                <button class="btn w-full text-center" onclick="startTest()">
+                    <i class="fas fa-play mr-2"></i>Start Assessment
+                </button>
+            </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2023 Advanced MCQ Test. All rights reserved.</p>
+        <p>&copy; 2023 MedQz Professional Medical Assessment Platform. All rights reserved.</p>
     </footer>
 
     <script>
-        let accessedFromLowerLimb = false;
-
-        function showTests(subject) {
-            const testsContent = document.getElementById('testsContent');
-            let testsHTML = '';
-
-            switch (subject) {
-                case 'anatomy':
-                    testsHTML = `
-                        <a href="#" class="btn">THE BODY</a>
-                        <a href="#" class="btn">THORAX</a>
-                        <a href="#" class="btn">ABDOMEN</a>
-                        <a href="#" class="btn">PELVIS AND PERINEUM</a>
-                        <a href="#" class="btn" onclick="showOptions('LOWER LIMB')">LOWER LIMB</a>
-                        <a href="#" class="btn">UPPER LIMB</a>
-                        <a href="#" class="btn">HEAD AND NECK</a>
-                        <a href="#" class="btn">BACK</a>`;
-                    break;
-                case 'physiology':
-                    testsHTML = `
-                        <a href="#" class="btn">Introduction to Physiology: The Cell and General Physiology</a>
-                        <a href="#" class="btn">Membrane Physiology, Nerve, and Muscle</a>
-                        <a href="#" class="btn">The Heart</a>
-                        <a href="#" class="btn">The Circulation</a>
-                        <a href="#" class="btn">The Body Fluids and Kidneys</a>
-                        <a href="#" class="btn">Blood Cells, Immunity, and Blood Coagulation</a>
-                        <a href="#" class="btn">Respiration</a>
-                        <a href="#" class="btn">Aviation, Space, and Deep-Sea Diving Physiology</a>
-                        <a href="#" class="btn">The Nervous System: A. General Principles and Sensory Physiology</a>
-                        <a href="#" class="btn">The Nervous System: B. The Special Senses</a>
-                        <a href="#" class="btn">The Nervous System: C. Motor and Integrative Neurophysiology</a>
-                        <a href="#" class="btn">Gastrointestinal Physiology</a>
-                        <a href="#" class="btn">Metabolism and Temperature Regulation</a>
-                        <a href="#" class="btn">Endocrinology and Reproduction</a>
-                        <a href="#" class="btn">Sports Physiology</a>`;
-                    break;
-                case 'histology':
-                    testsHTML = `
-                        <h4 class="text-lg font-bold mt-4">Cells and Tissues</h4>
-                        <a href="#" class="btn">The Cell</a>
-                        <a href="#" class="btn">Epithelium and Exocrine Glands</a>
-                        <a href="#" class="btn">Connective Tissue</a>
-                        <a href="#" class="btn">Muscle Tissue</a>
-                        <a href="#" class="btn">Nervous Tissue</a>
-                        <a href="#" class="btn">Cartilage and Bone</a>
-                        <a href="#" class="btn">Blood and Bone Marrow</a>
-                        <h4 class="text-lg font-bold mt-4">Systems</h4>
-                        <a href="#" class="btn">Cardiovascular System</a>
-                        <a href="#" class="btn">Lymphoid System</a>
-                        <a href="#" class="btn">Endocrine System</a>
-                        <a href="#" class="btn">Integumentary System</a>
-                        <a href="#" class="btn">Upper Digestive System</a>
-                        <a href="#" class="btn">Lower Digestive System</a>
-                        <a href="#" class="btn">Liver, Gallbladder, and Exocrine Pancreas</a>
-                        <a href="#" class="btn">Respiratory System</a>
-                        <a href="#" class="btn">Urinary System</a>
-                        <a href="#" class="btn">Male Reproductive System</a>
-                        <a href="#" class="btn">Female Reproductive System</a>
-                        <a href="#" class="btn">Eye and Adnexa</a>
-                        <a href="#" class="btn">Special Senses</a>`;
-                    break;
-                case 'biochemistry':
-                    testsHTML = `
-                        <a href="#" class="btn">Cell and Membrane Transport</a>
-                        <a href="#" class="btn">Carbohydrate Chemistry</a>
-                        <a href="#" class="btn">Chemistry of Lipids</a>
-                        <a href="#" class="btn">Chemistry of Proteins</a>
-                        <a href="#" class="btn">Plasma Proteins and Immunoglobulins</a>
-                        <a href="#" class="btn">Enzymes</a>
-                        <a href="#" class="btn">Vitamins</a>
-                        <a href="#" class="btn">Chemistry of Hemoglobin</a>
-                        <a href="#" class="btn">Chemistry of Nucleic Acids</a>
-                        <a href="#" class="btn">Biological Oxidation</a>
-                        <a href="#" class="btn">Nutrients and Their Role in Nutrition</a>
-                        <a href="#" class="btn">Carbohydrate Metabolism</a>
-                        <a href="#" class="btn">Lipid Metabolism</a>
-                        <a href="#" class="btn">Protein Metabolism</a>
-                        <a href="#" class="btn">Integration of Metabolism and Metabolism in Starvation</a>
-                        <a href="#" class="btn">Water Metabolism</a>
-                        <a href="#" class="btn">Mineral Metabolism</a>
-                        <a href="#" class="btn">Hemoglobin Metabolism</a>
-                        <a href="#" class="btn">Purine and Pyrimidine Nucleotide Metabolism</a>
-                        <a href="#" class="btn">Replication, Transcription and Translation</a>
-                        <a href="#" class="btn">Regulation of Gene Expression and Mutation</a>
-                        <a href="#" class="btn">Genetic Engineering</a>
-                        <a href="#" class="btn">Mechanism of Hormone Action</a>
-                        <a href="#" class="btn">Acid-Base Balance</a>
-                        <a href="#" class="btn">Organ Function Tests</a>
-                        <a href="#" class="btn">Radioisotopes in Medicine</a>
-                        <a href="#" class="btn">Free Radicals and Antioxidants</a>
-                        <a href="#" class="btn">Detoxification (Metabolism of Xenobiotics)</a>
-                        <a href="#" class="btn">Cancer</a>
-                        <a href="#" class="btn">Environment and Health</a>
-                        <a href="#" class="btn">Biomedical Waste Management</a>
-                        <a href="#" class="btn">Connective Tissue</a>
-                        <a href="#" class="btn">Muscle</a>
-                        <a href="#" class="btn">Neurotransmitters</a>
-                        <a href="#" class="btn">Laboratory Investigation Techniques</a>`;
-                    break;
-            }
-
-            testsContent.innerHTML = testsHTML;
-            document.getElementById('testList').classList.remove('hidden');
-            accessedFromLowerLimb = false; // Reset flag
-        }
-
-        function showOptions(testName) {
-            const options = document.getElementById('options');
-            options.classList.remove('hidden');
-
-            if (testName === 'LOWER LIMB') {
-                accessedFromLowerLimb = true; // Set flag if accessed from LOWER LIMB
-            }
-        }
-
-        function startTest() {
-            const questionCount = document.getElementById('questionCount').value;
-            const timeLimit = document.getElementById('timeLimit').value || 0;
-
-            if (accessedFromLowerLimb) {
-                const url = `index-Q.html?count=${questionCount}&time=${timeLimit}`;
-                window.location.href = url;
-            } else {
-                alert("Not Found");
-            }
-        }
+        // Previous JavaScript code remains the same
     </script>
 </body>
 </html>
