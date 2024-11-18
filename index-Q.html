@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار</title>
+    <title>Quiz</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
@@ -97,43 +97,48 @@
 <body class="min-h-screen flex flex-col">
     <div class="container mx-auto px-4 py-8 flex-grow">
         <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold mb-4 animate__animated animate__fadeInDown">اختبار</h1>
+            <h1 class="text-4xl font-bold mb-4 animate__animated animate__fadeInDown">Quiz</h1>
             <div class="flex justify-center items-center space-x-4">
                 <button id="darkModeToggle" class="btn bg-gray-800 text-white px-4 py-2 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                     </svg>
-                    تبديل الوضع الليلي
+                    Toggle Dark Mode
                 </button>
             </div>
         </header>
 
         <main class="neumorphic p-8 mb-8 animate__animated animate__fadeIn">
-            <div id="timer" class="mb-4">زمن الاختبار: <span id="timeDisplay">00:00</span></div>
+            <div id="timer" class="mb-4">Time Remaining: <span id="timeDisplay">00:00</span></div>
             <div id="progressBarContainer" class="mb-6 bg-gray-200 rounded-full">
                 <div id="progressBar" class="bg-blue-500 text-xs leading-none py-1 text-center text-white rounded-full" style="width: 0%"></div>
             </div>
             <div id="question" class="text-2xl font-bold mb-6"></div>
             <div id="options" class="space-y-4"></div>
+            <div class="flex justify-between items-center mb-4">
+                <input type="number" id="questionInput" min="1" class="border rounded-md px-2 py-1" placeholder="Question Number">
+                <button id="goToQuestionButton" class="btn bg-blue-500 text-white px-4 py-2 rounded-md">Go to Question</button>
+            </div>
+            <div id="answeredCount" class="text-lg mb-2">Answered 0 out of 0 questions</div>
         </main>
 
         <div class="flex justify-between mb-8">
-            <button id="prevButton" class="btn bg-gray-500 text-white px-6 py-2 rounded-full" disabled>السابق</button>
-            <button id="nextButton" class="btn bg-blue-500 text-white px-6 py-2 rounded-full">التالي</button>
+            <button id="prevButton" class="btn bg-gray-500 text-white px-6 py-2 rounded-full" disabled>Previous</button>
+            <button id="nextButton" class="btn bg-blue-500 text-white px-6 py-2 rounded-full">Next</button>
         </div>
 
         <div id="results" class="hidden animate__animated animate__fadeIn">
-            <h2 class="text-3xl font-bold mb-6 text-center">نتائج الاختبار</h2>
+            <h2 class="text-3xl font-bold mb-6 text-center">Quiz Results</h2>
             <div id="finalScore" class="text-2xl font-bold mb-6 text-center"></div>
             <div id="resultsContent" class="space-y-6"></div>
             <div class="text-center mt-8">
-                <button id="printButton" class="btn bg-green-500 text-white px-6 py-2 rounded-full">طباعة النتائج</button>
+                <button id="printButton" class="btn bg-green-500 text-white px-6 py-2 rounded-full">Print Results</button>
             </div>
         </div>
     </div>
 
     <footer class="bg-gray-800 text-white py-4 text-center">
-        <p>&copy; 2023 اختبار. جميع الحقوق محفوظة.</p>
+        <p>&copy; 2023 Quiz. All rights reserved.</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
@@ -143,7 +148,7 @@
         let selectedAnswers = [];
         let timeRemaining;
         let timerInterval;
-        let totalQuestions; // تحديد عدد الأسئلة
+        let totalQuestions; // Total number of questions
 
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
@@ -155,10 +160,10 @@
         async function loadQuestions() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                const timeLimit = parseInt(urlParams.get('time')) || 0; // قراءة زمن الاختبار
-                totalQuestions = parseInt(urlParams.get('count')) || 10; // قراءة عدد الأسئلة
+                const timeLimit = parseInt(urlParams.get('time')) || 0; // Read time limit
+                totalQuestions = parseInt(urlParams.get('count')) || 10; // Read number of questions
 
-                timeRemaining = timeLimit * 60; // تحويل الزمن إلى ثواني
+                timeRemaining = timeLimit * 60; // Convert time to seconds
 
                 const response = await fetch('LowerLimb-Q.txt');
                 if (!response.ok) {
@@ -167,7 +172,7 @@
                 const text = await response.text();
                 const questionBlocks = text.split('###').map(q => q.trim()).filter(q => q.length > 0);
                 
-                // اختيار عدد الأسئلة المحدد
+                // Select the specified number of questions
                 questions = questionBlocks.sort(() => 0.5 - Math.random()).slice(0, totalQuestions).map(block => {
                     const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
                     const question = lines[0];
@@ -179,10 +184,10 @@
 
                 displayQuestion();
                 updateProgressBar();
-                startTimer(); // بدء العد التنازلي
+                startTimer(); // Start countdown
             } catch (error) {
                 console.error('Error loading questions:', error);
-                document.getElementById('question').innerText = 'حدث خطأ أثناء تحميل الأسئلة.';
+                document.getElementById('question').innerText = 'An error occurred while loading questions.';
             }
         }
 
@@ -190,7 +195,7 @@
             if (currentQuestionIndex < questions.length) {
                 const { question, options } = questions[currentQuestionIndex];
                 
-                document.getElementById('question').innerText = `السؤال ${currentQuestionIndex + 1}: ${question}`;
+                document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${question}`;
                 document.getElementById('options').innerHTML = options.map((option, index) => 
                     `<div class="option">
                         <input type="radio" name="option" id="option${index}" class="hidden" ${selectedAnswers[currentQuestionIndex] === index ? 'checked' : ''} onclick="selectOption(${index})">
@@ -201,13 +206,19 @@
                 ).join('');
                 
                 document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
-                document.getElementById('nextButton').innerText = currentQuestionIndex === questions.length - 1 ? 'إنهاء الاختبار' : 'التالي';
+                document.getElementById('nextButton').innerText = currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next';
 
+                updateAnsweredCount();
                 gsap.from("#question", {opacity: 0, y: -20, duration: 0.5});
                 gsap.from(".option", {opacity: 0, x: -20, duration: 0.5, stagger: 0.1});
             } else {
                 showResults();
             }
+        }
+
+        function updateAnsweredCount() {
+            const answeredCount = selectedAnswers.filter(answer => answer !== undefined).length;
+            document.getElementById('answeredCount').innerText = `Answered ${answeredCount} out of ${questions.length} questions`;
         }
 
         function updateProgressBar() {
@@ -219,12 +230,13 @@
 
         function selectOption(index) {
             selectedAnswers[currentQuestionIndex] = index;
+            updateAnsweredCount();
             gsap.to(`.option:nth-child(${index + 1})`, {scale: 1.05, duration: 0.2, yoyo: true, repeat: 1});
         }
 
         document.getElementById('nextButton').addEventListener('click', () => {
             if (currentQuestionIndex === questions.length - 1) {
-                const confirmFinish = confirm("هل أنت متأكد أنك تريد إنهاء الاختبار؟");
+                const confirmFinish = confirm("Are you sure you want to finish the quiz?");
                 if (confirmFinish) {
                     showResults();
                 }
@@ -243,6 +255,17 @@
             }
         });
 
+        document.getElementById('goToQuestionButton').addEventListener('click', () => {
+            const questionNumber = parseInt(document.getElementById('questionInput').value) - 1;
+            if (questionNumber >= 0 && questionNumber < questions.length) {
+                currentQuestionIndex = questionNumber;
+                displayQuestion();
+                updateProgressBar();
+            } else {
+                alert("Invalid question number.");
+            }
+        });
+
         function showResults() {
             let correctCount = 0;
             let resultsContent = '';
@@ -257,7 +280,7 @@
                 
                 resultsContent += `
                     <div class="neumorphic p-6 mb-6">
-                        <h3 class="text-xl font-bold mb-4">السؤال ${index + 1}: ${question.question}</h3>
+                        <h3 class="text-xl font-bold mb-4">Question ${index + 1}: ${question.question}</h3>
                         <div class="space-y-2">
                             ${question.options.map((option, idx) => {
                                 const isCorrect = option === correctAnswer;
@@ -275,12 +298,12 @@
                                 return `<div class="${className}">${option}</div>`;
                             }).join('')}
                         </div>
-                        <p class="mt-4"><strong>إجابتك:</strong> ${selectedAnswer !== undefined ? selectedAnswer : 'لم يتم الإجابة'}</p>
-                        <p><strong>الإجابة الصحيحة:</strong> ${correctAnswer}</p>
+                        <p class="mt-4"><strong>Your Answer:</strong> ${selectedAnswer !== undefined ? selectedAnswer : 'Not Answered'}</p>
+                        <p><strong>Correct Answer:</strong> ${correctAnswer}</p>
                     </div>`;
             });
             
-            document.getElementById('finalScore').innerText = `درجتك النهائية: ${correctCount} من ${questions.length}`;
+            document.getElementById('finalScore').innerText = `Your Final Score: ${correctCount} out of ${questions.length}`;
             document.getElementById('resultsContent').innerHTML = resultsContent;
             document.getElementById('results').style.display = 'block';
             
@@ -294,7 +317,7 @@
         document.getElementById('printButton').addEventListener('click', () => {
             const printContent = document.getElementById('results').innerHTML;
             const newWindow = window.open('', '', 'height=600,width=800');
-            newWindow.document.write('<html><head><title>طباعة النتائج</title>');
+            newWindow.document.write('<html><head><title>Print Results</title>');
             newWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">');
             newWindow.document.write('</head><body>');
             newWindow.document.write(printContent);
@@ -313,7 +336,7 @@
 
                 if (timeRemaining < 0) {
                     clearInterval(timerInterval);
-                    showResults(); // إنهاء الاختبار تلقائيًا عند انتهاء الزمن
+                    showResults(); // Automatically finish the quiz when time is up
                 }
             }, 1000);
         }
