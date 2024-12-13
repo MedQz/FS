@@ -211,6 +211,16 @@
         function selectOption(index) {
             selectedAnswers[currentQuestionIndex] = index;
             updateAnsweredCount();
+            const options = document.querySelectorAll('.option-label');
+
+            options.forEach((option, idx) => {
+                if (idx === index) {
+                    option.classList.add('bg-blue-200'); // لون للخيار المحدد
+                } else {
+                    option.classList.remove('bg-blue-200'); // إزالة اللون من الخيارات الأخرى
+                }
+            });
+
             gsap.to(`.option:nth-child(${index + 1})`, {scale: 1.05, duration: 0.2, yoyo: true, repeat: 1});
         }
 
