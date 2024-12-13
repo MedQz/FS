@@ -31,6 +31,7 @@
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
             line-height: 1.2; /* تقليل المسافة بين الأسطر */
+            font-size: 14px; /* Reduce font size */
         }
 
         .neumorphic {
@@ -38,43 +39,22 @@
             box-shadow: 8px 8px 15px rgba(0,0,0,0.1), -8px -8px 15px rgba(255,255,255,0.1);
             border-radius: 15px;
             transition: all 0.3s ease;
-        }
-
-        .neumorphic:hover {
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.15), -10px -10px 20px rgba(255,255,255,0.15);
+            padding: 12px; /* Reduce padding */
         }
 
         .btn {
             transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 8px 12px; /* Reduce button padding */
         }
 
         .option-label {
             cursor: pointer;
             transition: all 0.3s ease;
-        }
-
-        .option-label:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-
-        input[type="radio"]:checked + .option-label {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        #progressBar {
-            transition: width 0.5s ease-in-out;
+            padding: 8px; /* Reduce option padding */
         }
 
         #timer {
-            font-size: 24px;
-            font-weight: bold;
-            color: #e74c3c;
+            font-size: 20px; /* Reduce timer font size */
         }
 
         @keyframes float {
@@ -96,12 +76,12 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <div class="container mx-auto px-4 py-8 flex-grow">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold mb-4 animate__animated animate__fadeInDown">Quiz</h1>
-            <div class="flex justify-center items-center space-x-4">
-                <button id="darkModeToggle" class="btn bg-gray-800 text-white px-4 py-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+    <div class="container mx-auto px-2 py-4 flex-grow">
+        <header class="text-center mb-4">
+            <h1 class="text-3xl font-bold mb-2 animate__animated animate__fadeInDown">Quiz</h1>
+            <div class="flex justify-center items-center space-x-2">
+                <button id="darkModeToggle" class="btn bg-gray-800 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                     </svg>
                     Toggle Dark Mode
@@ -109,36 +89,36 @@
             </div>
         </header>
 
-        <main class="neumorphic p-8 mb-8 animate__animated animate__fadeIn">
-            <div id="timer" class="mb-4">Time Remaining: <span id="timeDisplay">00:00</span></div>
-            <div id="progressBarContainer" class="mb-6 bg-gray-200 rounded-full">
+        <main class="neumorphic mb-4 animate__animated animate__fadeIn">
+            <div id="timer" class="mb-2">Time Remaining: <span id="timeDisplay">00:00</span></div>
+            <div id="progressBarContainer" class="mb-4 bg-gray-200 rounded-full">
                 <div id="progressBar" class="bg-blue-500 text-xs leading-none py-1 text-center text-white rounded-full" style="width: 0%"></div>
             </div>
-            <div id="question" class="text-2xl font-bold mb-6"></div>
-            <div id="options" class="space-y-4"></div>
-            <div class="flex justify-between items-center mb-4">
-                <input type="number" id="questionInput" min="1" class="border rounded-md px-2 py-1" placeholder="Question Number">
-                <button id="goToQuestionButton" class="btn bg-blue-500 text-white px-4 py-2 rounded-md">Go</button> <!-- تعديل النص هنا -->
+            <div id="question" class="text-xl font-bold mb-4"></div>
+            <div id="options" class="space-y-2"></div>
+            <div class="flex justify-between items-center mb-2">
+                <input type="number" id="questionInput" min="1" class="border rounded-md px-1 py-1" placeholder="Question Number">
+                <button id="goToQuestionButton" class="btn bg-blue-500 text-white">Go</button>
             </div>
-            <div id="answeredCount" class="text-lg mb-2">Answered 0 out of 0 questions</div>
+            <div id="answeredCount" class="text-lg mb-1">Answered 0 out of 0 questions</div>
         </main>
 
-        <div class="flex justify-between mb-8">
-            <button id="prevButton" class="btn bg-gray-500 text-white px-6 py-2 rounded-full" disabled>Previous</button>
-            <button id="nextButton" class="btn bg-blue-500 text-white px-6 py-2 rounded-full">Next</button>
+        <div class="flex justify-between mb-4">
+            <button id="prevButton" class="btn bg-gray-500 text-white" disabled>Previous</button>
+            <button id="nextButton" class="btn bg-blue-500 text-white">Next</button>
         </div>
 
         <div id="results" class="hidden animate__animated animate__fadeIn">
-            <h2 class="text-3xl font-bold mb-6 text-center">Quiz Results</h2>
-            <div id="finalScore" class="text-2xl font-bold mb-6 text-center"></div>
-            <div id="resultsContent" class="space-y-6"></div>
-            <div class="text-center mt-8">
-                <button id="printButton" class="btn bg-green-500 text-white px-6 py-2 rounded-full">Print Results</button>
+            <h2 class="text-2xl font-bold mb-4 text-center">Quiz Results</h2>
+            <div id="finalScore" class="text-xl font-bold mb-4 text-center"></div>
+            <div id="resultsContent" class="space-y-4"></div>
+            <div class="text-center mt-4">
+                <button id="printButton" class="btn bg-green-500 text-white">Print Results</button>
             </div>
         </div>
     </div>
 
-    <footer class="bg-gray-800 text-white py-4 text-center">
+    <footer class="bg-gray-800 text-white py-2 text-center">
         <p>&copy; 2023 Quiz. All rights reserved.</p>
     </footer>
 
@@ -149,7 +129,7 @@
         let selectedAnswers = [];
         let timeRemaining;
         let timerInterval;
-        let totalQuestions; // Total number of questions
+        let totalQuestions;
 
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
@@ -161,10 +141,10 @@
         async function loadQuestions() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                const timeLimit = parseInt(urlParams.get('time')) || 0; // Read time limit
-                totalQuestions = parseInt(urlParams.get('count')) || 10; // Read number of questions
+                const timeLimit = parseInt(urlParams.get('time')) || 0;
+                totalQuestions = parseInt(urlParams.get('count')) || 10;
 
-                timeRemaining = timeLimit * 60; // Convert time to seconds
+                timeRemaining = timeLimit * 60;
 
                 const response = await fetch('LowerLimb-Q.txt');
                 if (!response.ok) {
@@ -173,7 +153,6 @@
                 const text = await response.text();
                 const questionBlocks = text.split('###').map(q => q.trim()).filter(q => q.length > 0);
                 
-                // Select the specified number of questions
                 questions = questionBlocks.sort(() => 0.5 - Math.random()).slice(0, totalQuestions).map(block => {
                     const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
                     const question = lines[0];
@@ -185,7 +164,7 @@
 
                 displayQuestion();
                 updateProgressBar();
-                startTimer(); // Start countdown
+                startTimer();
             } catch (error) {
                 console.error('Error loading questions:', error);
                 document.getElementById('question').innerText = 'An error occurred while loading questions.';
@@ -200,7 +179,7 @@
                 document.getElementById('options').innerHTML = options.map((option, index) => 
                     `<div class="option">
                         <input type="radio" name="option" id="option${index}" class="hidden" ${selectedAnswers[currentQuestionIndex] === index ? 'checked' : ''} onclick="selectOption(${index})">
-                        <label for="option${index}" class="option-label block p-4 rounded-lg transition-all duration-300 ease-in-out">
+                        <label for="option${index}" class="option-label block p-2 rounded-lg transition-all duration-300 ease-in-out">
                             ${option}
                         </label>
                     </div>`
@@ -280,13 +259,13 @@
                 }
                 
                 resultsContent += `
-                    <div class="neumorphic p-6 mb-6">
-                        <h3 class="text-xl font-bold mb-4">Question ${index + 1}: ${question.question}</h3>
-                        <div class="space-y-2">
+                    <div class="neumorphic p-4 mb-4">
+                        <h3 class="text-lg font-bold mb-2">Question ${index + 1}: ${question.question}</h3>
+                        <div class="space-y-1">
                             ${question.options.map((option, idx) => {
                                 const isCorrect = option === correctAnswer;
                                 const isSelected = selectedAnswers[index] === idx;
-                                let className = 'p-2 rounded';
+                                let className = 'p-1 rounded';
                                 
                                 if (isSelected && isCorrect) {
                                     className += ' bg-green-200 text-green-800';
@@ -299,7 +278,7 @@
                                 return `<div class="${className}">${option}</div>`;
                             }).join('')}
                         </div>
-                        <p class="mt-4"><strong>Your Answer:</strong> ${selectedAnswer !== undefined ? selectedAnswer : 'Not Answered'}</p>
+                        <p class="mt-2"><strong>Your Answer:</strong> ${selectedAnswer !== undefined ? selectedAnswer : 'Not Answered'}</p>
                         <p><strong>Correct Answer:</strong> ${correctAnswer}</p>
                     </div>`;
             });
@@ -337,14 +316,13 @@
 
                 if (timeRemaining < 0) {
                     clearInterval(timerInterval);
-                    showResults(); // Automatically finish the quiz when time is up
+                    showResults();
                 }
             }, 1000);
         }
 
         window.onload = loadQuestions;
 
-        // Background animation
         const canvas = document.createElement('canvas');
         document.body.appendChild(canvas);
         canvas.style.position = 'fixed';
