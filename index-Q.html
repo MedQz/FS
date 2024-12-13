@@ -30,6 +30,7 @@
             background-color: var(--background-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            line-height: 1.2; /* تقليل المسافة بين الأسطر */
         }
 
         .neumorphic {
@@ -117,7 +118,7 @@
             <div id="options" class="space-y-4"></div>
             <div class="flex justify-between items-center mb-4">
                 <input type="number" id="questionInput" min="1" class="border rounded-md px-2 py-1" placeholder="Question Number">
-                <button id="goToQuestionButton" class="btn bg-blue-500 text-white px-4 py-2 rounded-md">Go to Question</button>
+                <button id="goToQuestionButton" class="btn bg-blue-500 text-white px-4 py-2 rounded-md">Go</button> <!-- تعديل النص هنا -->
             </div>
             <div id="answeredCount" class="text-lg mb-2">Answered 0 out of 0 questions</div>
         </main>
