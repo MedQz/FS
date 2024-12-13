@@ -99,6 +99,36 @@
         .hidden {
             display: none;
         }
+
+        .search-input {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            color: black; /* لون الخط */
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -129,18 +159,22 @@
 
         <div id="testList" class="hidden test-list">
             <h3 class="text-xl font-bold mb-4">Test List:</h3>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search tests..." onkeyup="filterTests()" />
             <div id="testsContent"></div>
         </div>
 
-        <div id="options" class="options hidden">
-            <h3 class="text-xl font-bold mb-4">Test Options</h3>
-            <label for="questionCount" class="block mb-2">Number of Questions:</label>
-            <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="Enter number of questions" required />
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 class="text-xl font-bold mb-4">Test Options</h3>
+                <label for="questionCount" class="block mb-2">Number of Questions:</label>
+                <input type="number" id="questionCount" class="border rounded p-2 mb-4" placeholder="Enter number of questions" required />
 
-            <label for="timeLimit" class="block mb-2">Test Duration (in minutes):</label>
-            <input type="number" id="timeLimit" class="border rounded p-2 mb-4" placeholder="Enter test duration in minutes" required />
+                <label for="timeLimit" class="block mb-2">Test Duration (in minutes):</label>
+                <input type="number" id="timeLimit" class="border rounded p-2 mb-4" placeholder="Enter test duration in minutes" required />
 
-            <button class="btn mt-4" onclick="startTest()">Start Test</button>
+                <button class="btn mt-4" onclick="startTest()">Start Test</button>
+                <button class="btn mt-2" onclick="closeModal()">Close</button>
+            </div>
         </div>
     </div>
 
@@ -150,6 +184,7 @@
 
     <script>
         let accessedFromLowerLimb = false;
+        let currentTests = [];
 
         function showTests(subject) {
             const testsContent = document.getElementById('testsContent');
@@ -250,18 +285,31 @@
                     break;
             }
 
+            currentTests = testsHTML.match(/<a href="#".*?<\/a>/g) || [];
             testsContent.innerHTML = testsHTML;
             document.getElementById('testList').classList.remove('hidden');
             accessedFromLowerLimb = false; // Reset flag
         }
 
+        function filterTests() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const testsContent = document.getElementById('testsContent');
+            const filteredTests = currentTests.filter(test => test.toLowerCase().includes(input));
+            testsContent.innerHTML = filteredTests.join('');
+        }
+
         function showOptions(testName) {
-            const options = document.getElementById('options');
-            options.classList.remove('hidden');
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
 
             if (testName === 'LOWER LIMB') {
                 accessedFromLowerLimb = true; // Set flag if accessed from LOWER LIMB
             }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
         }
 
         function startTest() {
